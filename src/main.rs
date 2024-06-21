@@ -1,9 +1,9 @@
-use std::env;
+use std::{env, sync::Arc};
 
 use dotenv::dotenv;
 
 use serenity::{
-  all::{CreateInteractionResponse, CreateInteractionResponseMessage},
+  all::{ActivityData, CreateInteractionResponse, CreateInteractionResponseMessage},
   async_trait,
   model::{application::Interaction, gateway::Ready, id::GuildId},
   prelude::*,
@@ -29,6 +29,30 @@ impl EventHandler for Handler {
     let commands = guild_id.set_commands(&ctx.http, vec![commands::ping::register(), commands::status::register()]).await;
 
     println!("Commands: {commands:#?}");
+
+    if let Err(why) = commands {
+      println!("Error setting commands: {:?}", why);
+    }
+
+    let ctx = Arc::new(ctx);
+
+    tokio::spawn(async move {
+      let mut last_player_count = usize::max_value();
+
+      loop {
+        let players = minecraft::get_players().await;
+
+        if players.len() != last_player_count {
+          last_player_count = players.len();
+
+          let status_text = format!("{} player{} online", players.len(), if players.len() == 1 { "" } else { "s" });
+
+          ctx.set_activity(Some(ActivityData::custom(status_text)));
+        }
+
+        tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+      }
+    });
   }
 
   async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
