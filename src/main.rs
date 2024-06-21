@@ -1,4 +1,4 @@
-use std::{env, sync::Arc};
+use std::env;
 
 use dotenv::dotenv;
 
@@ -34,10 +34,12 @@ impl EventHandler for Handler {
       println!("Error setting commands: {:?}", why);
     }
 
-    let ctx = Arc::new(ctx);
+    let ctx = ctx.clone();
 
     tokio::spawn(async move {
       let mut last_player_count = usize::max_value();
+
+      let mut interval = tokio::time::interval(std::time::Duration::from_secs(5));
 
       loop {
         let players = minecraft::get_players().await;
@@ -50,7 +52,7 @@ impl EventHandler for Handler {
           ctx.set_activity(Some(ActivityData::custom(status_text)));
         }
 
-        tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+        interval.tick().await;
       }
     });
   }
@@ -86,6 +88,18 @@ async fn main() {
   let intents = GatewayIntents::GUILD_MESSAGES;
 
   let mut client = Client::builder(&token, intents).event_handler(Handler).await.expect("Err creating client");
+
+  let shard_manager = client.shard_manager.clone();
+
+  tokio::spawn(async move {
+    tokio::signal::ctrl_c().await.expect("Error setting up signal handler");
+
+    println!("Shutting down...");
+
+    shard_manager.shutdown_all().await;
+
+    println!("Goodbye!");
+  });
 
   if let Err(why) = client.start().await {
     println!("Client error: {:?}", why);
