@@ -1,0 +1,14 @@
+[package]
+name = "minecraft-herd-bot"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+dotenv = "0.15.0"
+serenity = { version = "0.12.2", default-features = false, features = [
+  "client",
+  "gateway",
+  "model",
+  "rustls_backend",
+] }
+tokio = { version = "1.38.0", features = ["macros", "rt-multi-thread"] }
