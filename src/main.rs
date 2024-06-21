@@ -26,7 +26,9 @@ impl EventHandler for Handler {
         .expect("GUILD_ID must be an integer"),
     );
 
-    let commands = guild_id.set_commands(&ctx.http, vec![commands::ping::register(), commands::status::register()]).await;
+    let commands = guild_id
+      .set_commands(&ctx.http, vec![commands::ping::register(), commands::status::register(), commands::whitelist::register()])
+      .await;
 
     println!("Commands: {commands:#?}");
 
@@ -64,6 +66,7 @@ impl EventHandler for Handler {
       let content = match command.data.name.as_str() {
         "ping" => Some(commands::ping::run(&command.data.options())),
         "status" => Some(commands::status::run().await),
+        "whitelist" => Some(commands::whitelist::run(&command.data.options()).await),
         _ => Some("Unknown command".to_string()),
       };
 

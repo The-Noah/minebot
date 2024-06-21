@@ -7,6 +7,7 @@ authors = ["Noah Dunbar <noah@noahdunbar.com>"]
 [dependencies]
 async-minecraft-ping = "0.8.0"
 dotenv = "0.15.0"
+rcon = { version = "0.6.0", features = ["rt-tokio"] }
 serenity = { version = "0.12.2", default-features = false, features = [
   "client",
   "gateway",
