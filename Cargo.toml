@@ -2,6 +2,7 @@
 name = "minebot"
 version = "0.1.0"
 edition = "2021"
+authors = ["Noah Dunbar <noah@noahdunbar.com>"]
 
 [dependencies]
 async-minecraft-ping = "0.8.0"
