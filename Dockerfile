@@ -23,4 +23,4 @@ LABEL maintainer="Noah Dunbar <noah@noahdunbar.com>"
 
 COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/minebot /minebot
 
-ENTRYPOINT [ "minebot" ]
+ENTRYPOINT [ "/minebot" ]
