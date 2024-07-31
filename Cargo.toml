@@ -3,6 +3,13 @@ name = "minebot"
 version = "0.1.0"
 edition = "2021"
 authors = ["Noah Dunbar <noah@noahdunbar.com>"]
+description = "A simple Discord bot to interact with your Minecraft server"
+categories = ["command-line-utilities"]
+readme = "README.md"
+homepage = "https://github.com/The-Noah/minebot"
+repository = "https://github.com/The-Noah/minebot"
+license = "MIT"
+include = ["**/*.rs", "Cargo.{toml,lock}", "LICENSE", "README.md"]
 
 [dependencies]
 async-minecraft-ping = "0.8.0"
