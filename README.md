@@ -34,7 +34,7 @@ docker compose up -d
 1. Run the bot
 
 ```bash
-docker run -d --name minebot \
+docker run -d --restart unless-stopped --name minebot \
   -e DISCORD_TOKEN=your_discord_bot_token \
   -e GUILD_ID=your_discord_guild_id \
   -e MINECRAFT_IP=your_minecraft_server_ip \
